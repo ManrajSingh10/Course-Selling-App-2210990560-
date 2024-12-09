@@ -18,10 +18,9 @@ const signin = async (req, res) => {
             return res.status(401).json({ message: "Invalid Username/Password" });
         }
 
-        // Generate JWT token
-        const token = await user.generateToken();
+        const token = await user.generateToken();   // Generate JWT token
 
-        // Set token in the headers and as a cookie
+        // Set token in the headers as a cookie
         res.setHeader('Authorization', `Bearer ${token}`);
         const options = {
             httpOnly: true,
@@ -44,7 +43,6 @@ const signin = async (req, res) => {
 const signup = async (req, res) => {
   const { username, password, name, age, experience, gender, company } = req.body;
   try {
-      
       const existingAdmin = await Admin.findOne({ username: username });
       if (existingAdmin) {
           return res.status(400).json({
