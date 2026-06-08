@@ -44,26 +44,49 @@ const updateProgress = async(req,res) => {
 }
 
 const getProgress = async(req,res) => {
-  const userId = req.user?._id
+  const userId = req.user?._id;
+
   if(!userId) {
-    return res.status(401).json({message : "Unauthorized Access"})
-  } 
-  const courseId = req.params.courseId
-  if(!courseId) {
-    return res.status(400).json({message : "Course Id is not provided"})
+    return res.status(401).json({
+      message : "Unauthorized Access"
+    });
   }
+
+  const courseId = req.params.courseId;
+
+  if(!courseId) {
+    return res.status(400).json({
+      message : "Course Id is not provided"
+    });
+  }
+
   try {
-    const progress = await Progress.findOne({courseId,userId})
+
+    const progress = await Progress.findOne({
+      courseId,
+      userId
+    });
+
+    // FIX
     if(!progress){
-      return res.status(500).json({message: "Internal Server Error in fetching progress"})
+      return res.status(200).json({
+        message : "No progress found",
+        progress : null
+      });
     }
+
     return res.status(200).json({
-      message : "Progess Fetched Successfully",
+      message : "Progress Fetched Successfully",
       progress
-    })
+    });
+
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({message: "Internal Server Error"})
+
+    console.log(error);
+
+    return res.status(500).json({
+      message: error.message
+    });
   }
 }
 
